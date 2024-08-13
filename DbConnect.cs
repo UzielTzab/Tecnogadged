@@ -13,9 +13,9 @@ public class DbConnect
 
     public DbConnect()
     {
-        server = "localhost";
-        database = "teknogadget";
-        user = "root";
+        server = "192.168.100.69";
+        database = "tecnogadged";
+        user = "UzielRemote";
         password = "225699Uz";
         port = "3307";
         String connString = "Server=" + server + ";Database=" + database + ";port=" + port + ";User Id=" + user + ";password=" + password;
