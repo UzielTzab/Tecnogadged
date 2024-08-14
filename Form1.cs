@@ -39,9 +39,9 @@ public partial class Form1 : Form
 
         InitializeComponent();
         // Inicializar el DataGridView
-        dataGridView.Location = new Point(300, 200);
-        dataGridView.Size = new Size(1000, 500);
-        dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+        dataGridView.Location = new Point(250, 200);
+        dataGridView.Size = new Size(1200, 500);
+        dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.ColumnHeader;
         dataGridView.BorderStyle = BorderStyle.None;
         dataGridView.BackgroundColor = Color.White;
         dataGridView.EnableHeadersVisualStyles = false;
@@ -85,12 +85,12 @@ public partial class Form1 : Form
         leftPanel.Controls.Add(icon1);
 
         icon2 = new IconButton();
-        icon2.IconChar = IconChar.Desktop;
+        icon2.IconChar = IconChar.Mobile;
         icon2.IconColor = Color.White;
         icon2.Dock = DockStyle.Top;
         icon2.FlatStyle = FlatStyle.Flat;
         icon2.FlatAppearance.BorderSize = 0;
-        icon2.Text = "Clientes";
+        icon2.Text = "Entregas";
         icon2.TextImageRelation = TextImageRelation.ImageBeforeText;
         icon2.Font = new Font("Arial", 12, FontStyle.Bold);
         icon2.ForeColor = Color.White;
@@ -187,19 +187,90 @@ public partial class Form1 : Form
 
     }
 
-    //Funcion de boton para conectar a la base de datos
+    // Método para obtener todos los registros de la tabla "customers" y mostrarlos en el DataGridView
     public void GetAllRegiters(object sender, EventArgs e)
     {
         // Instanciar la clase DbConnect y ejecutar la consulta
         DbConnect dbConnect = new DbConnect();
-        string query = "SELECT * FROM customers ORDER BY fecha_traido DESC";
+        string query = "SELECT * FROM customers WHERE estatus IN ('PENDIENTE', 'ATRASADO') ORDER BY fecha_traido DESC";
+        // Verificar si la columna "Acciones" ya existe
+        if (!dataGridView.Columns.Contains("Acciones"))
+        {
+            // Agregar la columna de botones "Acciones"
+            DataGridViewButtonColumn accionesColumn = new DataGridViewButtonColumn();
+            accionesColumn.Name = "Acciones";
+            accionesColumn.HeaderCell.Style.ForeColor = Color.Green;
+            accionesColumn.HeaderText = "Acciones";
+            accionesColumn.Text = "Atender";
+            accionesColumn.UseColumnTextForButtonValue = true; // Mostrar el texto en los botones    
+            dataGridView.Columns.Add(accionesColumn);
+        }
+        // Verificar la columna de botones "Eliminar"
+        if (!dataGridView.Columns.Contains("Eliminar"))
+        {
+            // Agregar la columna de botones "Eliminar"
+            DataGridViewButtonColumn accionesColumn = new DataGridViewButtonColumn();
+            accionesColumn.Name = "Eliminar";
+            accionesColumn.HeaderCell.Style.ForeColor = Color.Red;
+            accionesColumn.HeaderText = "Eliminar";
+            accionesColumn.Text = "Borrar";
+            accionesColumn.UseColumnTextForButtonValue = true; // Mostrar el texto en los botones    
+            dataGridView.Columns.Add(accionesColumn);
+
+        }
         DataTable dataTable = dbConnect.ExecuteQuery(query);
 
         // Asignar los datos al DataGridView
         dataGridView.DataSource = dataTable;
+        // Deshabilitar la opción de agregar nuevas filas
+        dataGridView.AllowUserToAddRows = false;
+
+
+
+        // Desuscribirse de los eventos para evitar múltiples suscripciones
+        dataGridView.CellFormatting -= dataGridView_CellFormatting;
+        dataGridView.CellClick -= dataGridView_CellClick;
 
         // Manejar el evento CellFormatting para cambiar el color del texto de la columna "estatus"
         dataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler(dataGridView_CellFormatting);
+
+        // Manejar el evento CellClick para capturar los clics en los botones de la columna "Acciones"
+        dataGridView.CellClick += new DataGridViewCellEventHandler(dataGridView_CellClick);
+    }
+
+    // Manejador de eventos para el clic en los botones de la columna "Acciones"
+    private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+    {
+        // Verificar si el clic fue en la columna de botones
+        if (e.ColumnIndex == dataGridView.Columns["Acciones"].Index && e.RowIndex >= 0)
+        {
+            // Obtener el valor de la celda de la fila correspondiente
+            var cellValue = dataGridView.Rows[e.RowIndex].Cells["Acciones"].Value;
+            // Aquí puedes agregar la lógica que deseas ejecutar cuando se haga clic en el botón
+            //Pasar el datos de ese cleinte al formulario de atencion
+            int id = Convert.ToInt32(dataGridView.Rows[e.RowIndex].Cells["id"].Value);
+            string name = dataGridView.Rows[e.RowIndex].Cells["Nombre_cliente"].Value.ToString();
+            string tipoDispositivo = dataGridView.Rows[e.RowIndex].Cells["tipo_dispositivo"].Value.ToString();
+            string brand = dataGridView.Rows[e.RowIndex].Cells["marca"].Value.ToString();
+            string model = dataGridView.Rows[e.RowIndex].Cells["modelo"].Value.ToString();
+            // string problem = dataGridView.Rows[e.RowIndex].Cells["problema"].Value.ToString();
+            string statusNow = dataGridView.Rows[e.RowIndex].Cells["estatus"].Value.ToString();
+
+            OpenAtentionFormButton_Click(sender, e, id, name, tipoDispositivo, brand, model, "Decripcion del problema aquí", statusNow);
+        }
+        // Verificar si el clic fue en la columna de eliminar
+        if (e.ColumnIndex == dataGridView.Columns["Eliminar"].Index && e.RowIndex >= 0)
+        {
+            // Obtener el valor de la celda de la fila correspondiente
+            var cellValue = dataGridView.Rows[e.RowIndex].Cells["Eliminar"].Value;
+            // Aquí puedes agregar la lógica que deseas ejecutar cuando se haga clic en el botón
+            //Pasar el datos de ese cleinte al formulario de atencion
+            int id = Convert.ToInt32(dataGridView.Rows[e.RowIndex].Cells["id"].Value);
+
+            DeleteRecordById(id);
+
+        }
+
     }
 
     private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -223,6 +294,9 @@ public partial class Form1 : Form
                     case "ENTREGADO":
                         e.CellStyle.ForeColor = Color.DarkCyan;
                         break;
+                    case "NO REPARADO":
+                        e.CellStyle.ForeColor = Color.DarkRed;
+                        break;
                     default:
                         e.CellStyle.ForeColor = Color.Black;
                         break;
@@ -235,6 +309,31 @@ public partial class Form1 : Form
         using (CustomerForm customerForm = new CustomerForm(this))
         {
             customerForm.ShowDialog(Form1.ActiveForm);
+        }
+    }
+    private void OpenAtentionFormButton_Click(object sender, EventArgs e, int id, string name, string tipoDispositivo, string brand, string model, string problem, string statusNow)
+    {
+        using (AtentionCustomerForm customerForm = new AtentionCustomerForm(this, id: id, name: name, tipoDispositivo: tipoDispositivo, brand: brand, model: model, problem: problem, statusNow: statusNow))
+        {
+            customerForm.ShowDialog(Form1.ActiveForm);
+        }
+    }
+    private void DeleteRecordById(int id)
+    {
+        // Preguntar al usuario si está seguro de eliminar el registro
+        DialogResult result = MessageBox.Show("¿Está seguro de que desea eliminar este cliente?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+        if (result == DialogResult.Yes)
+        {
+            // Instanciar la clase DbConnect y ejecutar la consulta de eliminación
+            DbConnect dbConnect = new DbConnect();
+            string query = $"DELETE FROM customers WHERE id = {id}";
+            dbConnect.ExecuteQuery(query);
+
+            // Actualizar el DataGridView después de eliminar el registro
+            GetAllRegiters(null, null);
+
+            MessageBox.Show("Se eliminó correctamente el cliente", "Registro", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 

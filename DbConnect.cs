@@ -21,12 +21,16 @@ public class DbConnect
         String connString = "Server=" + server + ";Database=" + database + ";port=" + port + ";User Id=" + user + ";password=" + password;
         connection = new MySqlConnection(connString);
     }
+    public MySqlConnection Connection
+    {
+        get { return connection; }
+    }
     public void OpenConnection()
     {
         try
         {
             connection.Open();
-            MessageBox.Show("Conexión exitosa a la base de datos.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // MessageBox.Show("Conexión exitosa a la base de datos.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         catch (MySqlException ex)
         {
@@ -39,7 +43,7 @@ public class DbConnect
         try
         {
             connection.Close();
-            MessageBox.Show("Conexión cerrada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // MessageBox.Show("Conexión cerrada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         catch (MySqlException ex)
         {

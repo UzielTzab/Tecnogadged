@@ -22,10 +22,13 @@ namespace Tecknogadged
         //Selector de marca
         private ComboBox brand = new ComboBox();
 
+        //Campo de texto para agregar una descripcion de la reparacion
+        private TextBox description = new TextBox();
 
 
 
-        Button sendButto = new Button();
+
+        Button sendButton = new Button();
 
         public CustomerForm(Form1 form)
         {
@@ -121,7 +124,8 @@ namespace Tecknogadged
             type_device.Items.Add("Celular");
             type_device.Items.Add("Tablet");
             type_device.Items.Add("Laptop");
-            type_device.Items.Add("Desktop");
+            type_device.Items.Add("Bocina");
+
             type_device.SelectedIndex = 0;
             leftPanel.Controls.Add(type_device);
 
@@ -236,17 +240,45 @@ namespace Tecknogadged
             received_personIcon.BackColor = Color.Transparent;
             leftPanel.Controls.Add(received_personIcon);
 
+            //Campo de texto para agregar una descripcion de la reparacion
+            description.ForeColor = Color.White;
+            description.Location = new Point(300, 190);
+            description.Multiline = true;
+            description.ScrollBars = ScrollBars.Vertical;
+            description.Size = new Size(200, 100);
+            description.BackColor = Color.FromArgb(31, 30, 68);
+            description.BorderStyle = BorderStyle.None;
+            leftPanel.Controls.Add(description);
+
+            //Texto para el campo de descripcion
+            Label descriptionText = new Label();
+            descriptionText.Text = "Motivo del fallo";
+            descriptionText.Font = new Font("Arial", 12, FontStyle.Regular);
+            descriptionText.ForeColor = Color.Black;
+            descriptionText.Location = new Point(300, 160);
+            descriptionText.Size = new Size(200, 50);
+            leftPanel.Controls.Add(descriptionText);
+
+            //Icono para el campo de descripcion
+            IconPictureBox descriptionIcon = new IconPictureBox();
+            descriptionIcon.IconChar = IconChar.Comment;
+            descriptionIcon.IconColor = Color.FromArgb(31, 30, 68);
+            descriptionIcon.Location = new Point(260, 190);
+            descriptionIcon.Size = new Size(32, 32);
+            descriptionIcon.BackColor = Color.Transparent;
+            leftPanel.Controls.Add(descriptionIcon);
+
             // Boton para enviar los datos
-            sendButto.Text = "Enviar";
-            sendButto.Font = new Font("Arial", 12, FontStyle.Regular);
-            sendButto.Location = new Point(300, 300);
-            sendButto.Size = new Size(200, 50);
-            sendButto.BackColor = Color.FromArgb(31, 30, 68);
-            sendButto.ForeColor = Color.White;
-            sendButto.FlatStyle = FlatStyle.Flat;
-            sendButto.FlatAppearance.BorderSize = 0;
-            sendButto.Click += new EventHandler(PostARegister!);
-            leftPanel.Controls.Add(sendButto);
+            sendButton.Text = "Registrar";
+            sendButton.Font = new Font("Arial", 12, FontStyle.Regular);
+            sendButton.Location = new Point(300, 300);
+            sendButton.Size = new Size(200, 50);
+            sendButton.BackColor = Color.FromArgb(31, 30, 68);
+            sendButton.ForeColor = Color.White;
+            sendButton.FlatStyle = FlatStyle.Flat;
+            sendButton.FlatAppearance.BorderSize = 0;
+            sendButton.Click += new EventHandler(PostARegister!);
+            leftPanel.Controls.Add(sendButton);
 
         }
 
@@ -293,11 +325,11 @@ namespace Tecknogadged
                 //Fecha de ingreso automatica
                 String date_brought = DateTime.Now.ToString("yyyy-MM-dd");
                 //Mostrar en un messafge box los datos que se van a insertar
-                MessageBox.Show("Nombre: " + name.Text + "\nTelefono: " + phone.Text + "\nTipo de dispositivo: " + type_device.Text + "\nMarca: " + brand.Text + "\nModelo: " + model.Text + "\nPersona que recibio: " + received_person.Text, "Datos a insertar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // MessageBox.Show("Nombre: " + name.Text + "\nTelefono: " + phone.Text + "\nTipo de dispositivo: " + type_device.Text + "\nMarca: " + brand.Text + "\nModelo: " + model.Text + "\nPersona que recibio: " + received_person.Text, "Datos a insertar", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 string query = $"INSERT INTO customers (Nombre_cliente, telefono, tipo_dispositivo, marca, modelo, estatus, fecha_traido, fecha_entregado, persona_recibio, persona_reparo) VALUES ('{name.Text}', '{phone.Text}', '{type_device.Text}', '{brand.Text}', '{model.Text}', 'PENDIENTE', '{date_brought}', NULL, '{received_person.Text}', 'NO REPARADO')";
                 dbConnect.ExecuteQuery(query);
                 mainForm.GetAllRegiters(sender, e);
-                MessageBox.Show("Registro exitoso", "Registro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Registro de cliente exitoso", "Registro", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CloseModal(sender, e);
 
             }
