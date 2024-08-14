@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Tecknogadged")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+00631bb0dfd98810a903b54cd22a9d14a2ef706c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+44875d46dda9b25ec3d0105fb595ba159e9e6c1f")]
 [assembly: System.Reflection.AssemblyProductAttribute("Tecknogadged")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Tecknogadged")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

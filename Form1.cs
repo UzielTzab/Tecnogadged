@@ -59,6 +59,8 @@ public partial class Form1 : Form
 
         this.Load += new EventHandler(GetAllRegiters!);
 
+
+
         //----------------------------------------------------sizeBox izquierdo----------------------------------------------
         //Configuracion del sizeBox izquierdo, ocupar el todo el alto de la ventana y el 20% del ancho de la ventana
         leftPanel.Dock = DockStyle.Left;
@@ -82,6 +84,7 @@ public partial class Form1 : Form
         icon1.Font = new Font("Arial", 12, FontStyle.Bold);
         icon1.ForeColor = Color.White;
         icon1.Height = 60;
+        icon1.Click += new EventHandler(ShowAtentionPanel!);
         leftPanel.Controls.Add(icon1);
 
         icon2 = new IconButton();
@@ -95,6 +98,7 @@ public partial class Form1 : Form
         icon2.Font = new Font("Arial", 12, FontStyle.Bold);
         icon2.ForeColor = Color.White;
         icon2.Height = 60;
+        icon2.Click += new EventHandler(ShowDeliveriesPanel!);
         leftPanel.Controls.Add(icon2);
 
         icon3 = new IconButton();
@@ -238,6 +242,30 @@ public partial class Form1 : Form
         dataGridView.CellClick += new DataGridViewCellEventHandler(dataGridView_CellClick);
     }
 
+    // Método para obtener los registros que contengan "REPARADO" en la columna "estatus"
+    private void GetRepairedRegisters(object sender, EventArgs e)
+    {
+        // Instanciar la clase DbConnect y ejecutar la consulta
+        DbConnect dbConnect = new DbConnect();
+        string query = "SELECT * FROM customers WHERE estatus = 'REPARADO' ORDER BY fecha_entregado DESC";
+        DataTable dataTable = dbConnect.ExecuteQuery(query);
+
+        // Asignar los datos al DataGridView
+        dataGridView.DataSource = dataTable;
+        // Deshabilitar la opción de agregar nuevas filas
+        dataGridView.AllowUserToAddRows = false;
+
+        // Desuscribirse de los eventos para evitar múltiples suscripciones
+        dataGridView.CellFormatting -= dataGridView_CellFormatting;
+        dataGridView.CellClick -= dataGridView_CellClick;
+
+        // Manejar el evento CellFormatting para cambiar el color del texto de la columna "estatus"
+        dataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler(dataGridView_CellFormatting);
+
+        // Manejar el evento CellClick para capturar los clics en los botones de la columna "Acciones"
+        dataGridView.CellClick += new DataGridViewCellEventHandler(dataGridView_CellClick);
+    }
+
     // Manejador de eventos para el clic en los botones de la columna "Acciones"
     private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
     {
@@ -336,6 +364,96 @@ public partial class Form1 : Form
             MessageBox.Show("Se eliminó correctamente el cliente", "Registro", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
+    // Método para mostrar el panel de entregas
+    private void ShowDeliveriesPanel(object sender, EventArgs e)
+    {
+        // Limpiar el rightPanel
+        rightPanel.Controls.Clear();
 
+        // Agregar nuevos controles al rightPanel
+        //Titulo del apartado
+        title.Text = "Entregas";
+        title.Font = new Font("Arial", 20, FontStyle.Bold);
+        title.Location = new Point(300, 50);
+        title.Size = new Size(200, 50);
+        rightPanel.Controls.Add(title);
+
+        //Descripcion del apartado
+        description.Text = "Entrega los pendientes";
+        description.Font = new Font("Arial", 15, FontStyle.Regular);
+        description.ForeColor = Color.Gray;
+        description.Location = new Point(300, 100);
+        description.Size = new Size(300, 50);
+        rightPanel.Controls.Add(description);
+
+        //Icono de busqueda
+        IconPictureBox searchIcon = new IconPictureBox();
+        searchIcon.IconChar = IconChar.Search;
+        searchIcon.IconColor = Color.FromArgb(31, 30, 68);
+        searchIcon.Location = new Point(300, 150);
+        searchIcon.Size = new Size(32, 32);
+        searchIcon.BackColor = Color.Transparent;
+        rightPanel.Controls.Add(searchIcon);
+
+        //Campo de busqueda
+        TextBox search = new TextBox();
+        search.Font = new Font("Arial", 12, FontStyle.Regular);
+        search.ForeColor = Color.White;
+        search.Location = new Point(350, 150);
+        search.Size = new Size(200, 50);
+        search.BackColor = Color.FromArgb(31, 30, 68);
+        search.BorderStyle = BorderStyle.FixedSingle;
+        search.Font = new Font("Arial", 12, FontStyle.Regular);
+        search.TextAlign = HorizontalAlignment.Center;
+        rightPanel.Controls.Add(search);
+
+        this.Load += new EventHandler(GetRepairedRegisters!);// Cargar los registros de "Entregas"
+    }
+    // Método para mostrar el panel de atencion
+    private void ShowAtentionPanel(object sender, EventArgs e)
+    {
+        // Limpiar el rightPanel
+        rightPanel.Controls.Clear();
+
+        // Agregar nuevos controles al rightPanel
+        //Titulo del apartado
+        title.Text = "Clientes";
+        title.Font = new Font("Arial", 20, FontStyle.Bold);
+        title.Location = new Point(300, 50);
+        title.Size = new Size(200, 50);
+        rightPanel.Controls.Add(title);
+
+        //Descripcion del apartado
+        description.Text = "Filtra y atiende";
+        description.Font = new Font("Arial", 15, FontStyle.Regular);
+        description.ForeColor = Color.Gray;
+        description.Location = new Point(300, 100);
+        description.Size = new Size(300, 50);
+        rightPanel.Controls.Add(description);
+
+        //Icono de busqueda
+        IconPictureBox searchIcon = new IconPictureBox();
+        searchIcon.IconChar = IconChar.Search;
+        searchIcon.IconColor = Color.FromArgb(31, 30, 68);
+        searchIcon.Location = new Point(300, 150);
+        searchIcon.Size = new Size(32, 32);
+        searchIcon.BackColor = Color.Transparent;
+        rightPanel.Controls.Add(searchIcon);
+
+        //Campo de busqueda
+        TextBox search = new TextBox();
+        search.Font = new Font("Arial", 12, FontStyle.Regular);
+        search.ForeColor = Color.White;
+        search.Location = new Point(350, 150);
+        search.Size = new Size(200, 50);
+        search.BackColor = Color.FromArgb(31, 30, 68);
+        search.BorderStyle = BorderStyle.FixedSingle;
+        search.Font = new Font("Arial", 12, FontStyle.Regular);
+        search.TextAlign = HorizontalAlignment.Center;
+        rightPanel.Controls.Add(search);
+
+        this.Load += new EventHandler(GetAllRegiters!);
+
+    }
 
 }
