@@ -26,8 +26,10 @@ public partial class Form1 : Form
     private IconButton icon3;
     private IconButton icon4;
 
+    private Panel rightPanel = new Panel();
+
     //dataGridView para mostrar los datos de la base de datos
-    private DataGridView dataGridView;
+    public DataGridView dataGridView = new DataGridView();
 
     //Extraer las medidas de la pantalla del dispositivo
 
@@ -37,9 +39,8 @@ public partial class Form1 : Form
 
         InitializeComponent();
         // Inicializar el DataGridView
-        dataGridView = new DataGridView();
         dataGridView.Location = new Point(300, 200);
-        dataGridView.Size = new Size(1000, 300);
+        dataGridView.Size = new Size(1000, 500);
         dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         dataGridView.BorderStyle = BorderStyle.None;
         dataGridView.BackgroundColor = Color.White;
@@ -54,7 +55,7 @@ public partial class Form1 : Form
         dataGridView.ColumnHeadersHeight = 50;
         dataGridView.ReadOnly = true;
 
-        Controls.Add(dataGridView);
+        rightPanel.Controls.Add(dataGridView);
 
         this.Load += new EventHandler(GetAllRegiters!);
 
@@ -64,6 +65,10 @@ public partial class Form1 : Form
         leftPanel.Width = (int)(Width * 0.3);
         leftPanel.BackColor = Color.FromArgb(31, 30, 68);
         Controls.Add(leftPanel);
+
+        rightPanel.Dock = DockStyle.Fill;
+        rightPanel.BackColor = Color.White;
+        Controls.Add(rightPanel);
 
         //Iconos para el sizeBox izquierdo
         icon1 = new IconButton();
@@ -127,6 +132,7 @@ public partial class Form1 : Form
         int icon4X = (int)(leftPanel.Width * 0.08);
         int icon4Y = (int)(leftPanel.Height * 1.45);
         icon4.Location = new Point(icon4X, icon4Y);
+        icon4.Click += new EventHandler(OpenCustomerFormButton_Click!);
         leftPanel.Controls.Add(icon4);
 
 
@@ -139,14 +145,14 @@ public partial class Form1 : Form
 
 
 
-        //----------------------------------------------------Cuerpo del formulario----------------------------------------------
+        //----------------------------------------------------Cuerpo del panel derecho----------------------------------------------
 
         //Titulo del negocio
         title.Text = "Clientes";
         title.Font = new Font("Arial", 20, FontStyle.Bold);
         title.Location = new Point(300, 50);
         title.Size = new Size(200, 50);
-        Controls.Add(title);
+        rightPanel.Controls.Add(title);
 
         //Descripcion del negocio
         description.Text = "Filtra y atiende";
@@ -154,127 +160,82 @@ public partial class Form1 : Form
         description.ForeColor = Color.Gray;
         description.Location = new Point(300, 100);
         description.Size = new Size(300, 50);
-        Controls.Add(description);
+        rightPanel.Controls.Add(description);
 
-
+        //Icono de busqueda
+        IconPictureBox searchIcon = new IconPictureBox();
+        searchIcon.IconChar = IconChar.Search;
+        searchIcon.IconColor = Color.FromArgb(31, 30, 68);
+        searchIcon.Location = new Point(300, 150);
+        searchIcon.Size = new Size(32, 32);
+        searchIcon.BackColor = Color.Transparent;
+        rightPanel.Controls.Add(searchIcon);
 
         //Campo de busqueda
         TextBox search = new TextBox();
         search.Font = new Font("Arial", 12, FontStyle.Regular);
         search.ForeColor = Color.White;
-        search.Location = new Point(300, 150);
+        search.Location = new Point(350, 150);
         search.Size = new Size(200, 50);
         search.BackColor = Color.FromArgb(31, 30, 68);
         search.BorderStyle = BorderStyle.FixedSingle;
         search.Font = new Font("Arial", 12, FontStyle.Regular);
         search.TextAlign = HorizontalAlignment.Center;
-        Controls.Add(search);
-
-        // //Campo de nombre 
-        // name.Font = new Font("Arial", 12, FontStyle.Regular);
-        // name.ForeColor = Color.White;
-        // name.Location = new Point(350, 120);
-        // name.Size = new Size(200, 50);
-        // name.BackColor = Color.FromArgb(31, 30, 68);
-        // name.BorderStyle = BorderStyle.FixedSingle;
-        // name.Font = new Font("Arial", 12, FontStyle.Regular);
-        // name.TextAlign = HorizontalAlignment.Center;
-        // Controls.Add(name);
-
-        // //Icono para el campo de nombre
-        // IconPictureBox nameIcon = new IconPictureBox();
-        // nameIcon.IconChar = IconChar.User;
-        // nameIcon.IconColor = Color.FromArgb(31, 30, 68);
-        // nameIcon.Location = new Point(300, 120);
-        // nameIcon.Size = new Size(32, 32);
-        // nameIcon.BackColor = Color.Transparent;
-        // Controls.Add(nameIcon);
-
-        // //Campo de edad
-        // age = new TextBox();
-        // age.ForeColor = Color.White;
-        // age.Location = new Point(350, 180);
-        // age.Size = new Size(200, 50);
-        // age.BackColor = Color.FromArgb(31, 30, 68);
-        // age.BorderStyle = BorderStyle.FixedSingle;
-        // age.Font = new Font("Arial", 12, FontStyle.Regular);
-        // age.TextAlign = HorizontalAlignment.Center;
-        // Controls.Add(age);
-
-        // //Icono para el campo de edad
-        // IconPictureBox phoneIcon = new IconPictureBox();
-        // phoneIcon.IconChar = IconChar.Baby;
-        // phoneIcon.IconColor = Color.FromArgb(31, 30, 68);
-        // phoneIcon.Location = new Point(300, 180);
-        // phoneIcon.Size = new Size(32, 32);
-        // phoneIcon.BackColor = Color.Transparent;
-        // Controls.Add(phoneIcon);
-
-        // //Campo de salario
-        // salary = new TextBox();
-        // salary.ForeColor = Color.White;
-        // salary.Location = new Point(350, 240);
-        // salary.Size = new Size(200, 50);
-        // salary.BackColor = Color.FromArgb(31, 30, 68);
-        // salary.BorderStyle = BorderStyle.FixedSingle;
-        // salary.Font = new Font("Arial", 12, FontStyle.Regular);
-        // salary.TextAlign = HorizontalAlignment.Center;
-        // Controls.Add(salary);
-
-        // //Icono para el campo de salario
-        // IconPictureBox salaryIcon = new IconPictureBox();
-        // salaryIcon.IconChar = IconChar.MoneyBill;
-        // salaryIcon.IconColor = Color.FromArgb(31, 30, 68);
-        // salaryIcon.Location = new Point(300, 240);
-        // salaryIcon.Size = new Size(32, 32);
-        // salaryIcon.BackColor = Color.Transparent;
-        // Controls.Add(salaryIcon);
-
-        // //Boton para enviar los datos
-        // Button button = new Button();
-        // button.Text = "Enviar";
-        // button.Font = new Font("Arial", 12, FontStyle.Regular);
-        // button.Location = new Point(350, 300);
-        // button.Size = new Size(200, 50);
-        // button.BackColor = Color.FromArgb(31, 30, 68);
-        // button.ForeColor = Color.White;
-        // button.FlatStyle = FlatStyle.Flat;
-        // button.FlatAppearance.BorderSize = 0;
-        // button.Click += new EventHandler(PostARegister!);
-        // Controls.Add(button);
+        rightPanel.Controls.Add(search);
 
 
 
     }
 
     //Funcion de boton para conectar a la base de datos
-    private void GetAllRegiters(object sender, EventArgs e)
+    public void GetAllRegiters(object sender, EventArgs e)
     {
         // Instanciar la clase DbConnect y ejecutar la consulta
         DbConnect dbConnect = new DbConnect();
-        string query = "SELECT * FROM customers";
+        string query = "SELECT * FROM customers ORDER BY fecha_traido DESC";
         DataTable dataTable = dbConnect.ExecuteQuery(query);
 
         // Asignar los datos al DataGridView
         dataGridView.DataSource = dataTable;
+
+        // Manejar el evento CellFormatting para cambiar el color del texto de la columna "estatus"
+        dataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler(dataGridView_CellFormatting);
     }
-    //Boton que inserta datos en la tabla
-    private void PostARegister(object sender, EventArgs e)
+
+    private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
     {
-        try
+        if (dataGridView.Columns[e.ColumnIndex].Name == "estatus")
         {
-            DbConnect dbConnect = new DbConnect();
-            string query = "INSERT INTO customers (employee_name, age, salary) VALUES ('" + name.Text + "', " + age.Text + ", " + salary.Text + ")";
-            dbConnect.ExecuteQuery(query);
-            GetAllRegiters(sender, e);
-            MessageBox.Show("Registro exitoso", "Registro", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+            if (e.Value != null)
+            {
+                string estatus = e.Value.ToString();
+                switch (estatus)
+                {
+                    case "PENDIENTE":
+                        e.CellStyle.ForeColor = Color.Orange;
+                        break;
+                    case "ATRASADO":
+                        e.CellStyle.ForeColor = Color.Red;
+                        break;
+                    case "REPARADO":
+                        e.CellStyle.ForeColor = Color.Green;
+                        break;
+                    case "ENTREGADO":
+                        e.CellStyle.ForeColor = Color.DarkCyan;
+                        break;
+                    default:
+                        e.CellStyle.ForeColor = Color.Black;
+                        break;
+                }
+            }
         }
-        catch (Exception ex)
+    }
+    private void OpenCustomerFormButton_Click(object sender, EventArgs e)
+    {
+        using (CustomerForm customerForm = new CustomerForm(this))
         {
-            MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            customerForm.ShowDialog(Form1.ActiveForm);
         }
-
     }
 
 
